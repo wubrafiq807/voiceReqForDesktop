@@ -1,0 +1,414 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.ist.voice.req.org.form;
+
+import com.ist.voice.req.org.model.ButtonEditor;
+import com.ist.voice.req.org.model.LoginModel;
+import com.ist.voice.req.org.model.RecognitionListModel;
+import com.ist.voice.req.org.util.Constant;
+import com.ist.voice.req.org.util.Function;
+import java.awt.Color;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import javax.enterprise.inject.Default;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
+import com.ist.voice.req.org.model.ButtonRenderer;
+import com.ist.voice.req.org.model.ButtonViewEditor;
+import com.ist.voice.req.org.model.ButtonViewRenderer;
+import com.ist.voice.req.org.model.RecognitionResult;
+import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.border.EtchedBorder;
+import javax.swing.table.TableCellRenderer;
+
+/**
+ *
+ * @author mhc
+ */
+public class RecognitionList extends javax.swing.JFrame implements Constant {
+
+    Function siteFunction = new Function();
+    ArrayList<RecognitionResult> list;
+
+    /**
+     * Creates new form UserProfile
+     */
+    public RecognitionList(String flag) {
+        setVisible(false);
+    }
+
+    public RecognitionList() throws IOException {
+
+        if (!siteFunction.isLogin()) {
+            gotoLoginpage();
+        }
+        initComponents();
+        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
+        headerRenderer.setBackground(new Color(239, 198, 46));
+        headerRenderer.setHorizontalAlignment((int) CENTER_ALIGNMENT);
+
+        for (int i = 0; i < jTable1.getModel().getColumnCount(); i++) {
+            jTable1.getColumnModel().getColumn(i).setHeaderRenderer(headerRenderer);
+        }
+
+        DefaultTableCellRenderer rendar = new DefaultTableCellRenderer();
+        rendar.setOpaque(true);
+        rendar.setHorizontalAlignment((int) jTable1.CENTER_ALIGNMENT);
+//        rendar.setBackground(new Color(70, 168, 155));
+//        rendar.setBorder(BorderFactory.createBevelBorder(EtchedBorder.RAISED));
+        jTable1.getColumnModel().getColumn(0).setCellRenderer(rendar);
+        jTable1.getColumnModel().getColumn(1).setCellRenderer(rendar);
+
+        try {
+            this.list = (ArrayList<RecognitionResult>) (Object) siteFunction.getRecognitionList(siteFunction.loadSessionData().get(LOGIN_USER_ID)).getResult().stream().collect(Collectors.toList());
+            // siteFunction.showAlertMessage(String.copyValueOf(data));
+            jTable1.getColumn("Delete").setCellRenderer(new ButtonRenderer(REQ_ACTION_DELETE));
+            jTable1.getColumn("Delete").setCellEditor(new ButtonEditor(new JCheckBox(), this.list, REQ_ACTION_DELETE));
+            jTable1.getColumn("Show Details").setCellRenderer(new ButtonRenderer(REQ_ACTION_VIEW));
+            jTable1.getColumn("Show Details").setCellEditor(new ButtonEditor(new JCheckBox(), this.list, REQ_ACTION_VIEW));
+
+            addRowToJTable(list);
+        } catch (Exception e) {
+        }
+    }
+
+    public void close() {
+        System.err.println("2222222222222222222222222222222222222222222222");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        System.err.println("exit button clicked:");
+    }
+// added rows from arraylist to jtable
+
+    public void addRowToJTable(List<RecognitionResult> list) {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        TableColumnModel columnModel = jTable1.getColumnModel();
+        columnModel.getColumn(0).setResizable(false);
+        columnModel.getColumn(0).setPreferredWidth(20);
+        Object rowData[] = new Object[5];
+        for (int i = 0; i < list.size(); i++) {
+            rowData[0] = i + 1;
+            rowData[1] = list.get(i).getCreatedDate();
+            rowData[2] = list.get(i).getText();
+            rowData[3] = REQ_LIST_DELETE_TEXT;
+            rowData[4] = REQ_LIST_VIEW_TEXT;
+            model.addRow(rowData);
+        }
+        model.fireTableDataChanged();
+    }
+
+    private void gotoLoginpage() {
+
+        dispose();
+        Login login = new Login();
+        login.setVisible(true);
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jDatePickerUtil1 = new net.sourceforge.jdatepicker.util.JDatePickerUtil();
+        jLabel2 = new javax.swing.JLabel();
+        fromDateText = new com.toedter.calendar.JDateChooser();
+        jLabel3 = new javax.swing.JLabel();
+        toDateText = new com.toedter.calendar.JDateChooser();
+        searchBtn = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        resetBtn = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        leftSideMenu = new javax.swing.JMenu();
+        menuRecord = new javax.swing.JMenuItem();
+        menuItemRecognitionList = new javax.swing.JMenuItem();
+        menu_profile = new javax.swing.JMenuItem();
+        menu_user_signOut = new javax.swing.JMenuItem();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("RECOGNIZED LIST VIEW");
+
+        jLabel2.setText("From:");
+
+        jLabel3.setText("To:");
+
+        searchBtn.setBackground(new java.awt.Color(153, 255, 153));
+        searchBtn.setText("Seacrh");
+        searchBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchBtnActionPerformed(evt);
+            }
+        });
+
+        jTable1.setAutoCreateRowSorter(true);
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "NO.", "Created Date", "Text", "Delete", "Show Details"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.setIntercellSpacing(new java.awt.Dimension(2, 3));
+        jTable1.setRowHeight(25);
+        jTable1.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(jTable1);
+
+        resetBtn.setBackground(new java.awt.Color(255, 204, 204));
+        resetBtn.setText("Re-set");
+        resetBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetBtnActionPerformed(evt);
+            }
+        });
+
+        jPanel1.setBackground(new java.awt.Color(153, 153, 255));
+
+        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("RECOGNIZED LIST");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
+        );
+
+        leftSideMenu.setText("Menu");
+
+        menuRecord.setText("Record");
+        menuRecord.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuRecordActionPerformed(evt);
+            }
+        });
+        leftSideMenu.add(menuRecord);
+
+        menuItemRecognitionList.setText("Recognition List");
+        menuItemRecognitionList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemRecognitionListActionPerformed(evt);
+            }
+        });
+        leftSideMenu.add(menuItemRecognitionList);
+
+        menu_profile.setText("Profile");
+        menu_profile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_profileActionPerformed(evt);
+            }
+        });
+        leftSideMenu.add(menu_profile);
+
+        menu_user_signOut.setText("Signout");
+        menu_user_signOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_user_signOutActionPerformed(evt);
+            }
+        });
+        leftSideMenu.add(menu_user_signOut);
+
+        jMenuBar1.add(leftSideMenu);
+
+        setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(fromDateText, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(toDateText, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(resetBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(fromDateText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(searchBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(resetBtn))
+                    .addComponent(toDateText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void menuItemRecognitionListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRecognitionListActionPerformed
+        // TODO add your handling code here:
+        dispose();
+        try {
+            new RecognitionList().setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(UserProfile.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_menuItemRecognitionListActionPerformed
+
+    private void menu_user_signOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_user_signOutActionPerformed
+        // TODO add your handling code here:
+        siteFunction.unsetLoginData();
+        gotoLoginpage();
+
+    }//GEN-LAST:event_menu_user_signOutActionPerformed
+
+    private void menu_profileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_profileActionPerformed
+        dispose();
+        try {
+            new UserProfile().setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(RecognitionList.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_menu_profileActionPerformed
+
+    private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
+        String fromDate = null, toDate = null;
+        if (fromDateText.getDate() != null) {
+            fromDate = siteFunction.getDateFormate(fromDateText.getDate().toGMTString());
+        }
+        if (toDateText.getDate() != null) {
+            toDate = siteFunction.getDateFormate(toDateText.getDate().toGMTString());
+        }
+
+        try {
+            list = (ArrayList<RecognitionResult>) (Object) siteFunction.getRecognitionList(siteFunction.loadSessionData().get(LOGIN_USER_ID), fromDate, toDate).getResult().stream().collect(Collectors.toList());
+            addRowToJTable(list);
+        } catch (Exception ex) {
+            Logger.getLogger(RecognitionList.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+        }
+
+    }//GEN-LAST:event_searchBtnActionPerformed
+
+    private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
+
+        fromDateText.setDate(null);
+        toDateText.setDate(null);
+    }//GEN-LAST:event_resetBtnActionPerformed
+
+    private void menuRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRecordActionPerformed
+        try {
+            // TODO add your handling code here:
+            dispose();
+            new VoiceRecording().setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(RecognitionList.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_menuRecordActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(RecognitionList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(RecognitionList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(RecognitionList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(RecognitionList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    new RecognitionList().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(RecognitionList.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+    }
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.toedter.calendar.JDateChooser fromDateText;
+    private net.sourceforge.jdatepicker.util.JDatePickerUtil jDatePickerUtil1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JMenu leftSideMenu;
+    private javax.swing.JMenuItem menuItemRecognitionList;
+    private javax.swing.JMenuItem menuRecord;
+    private javax.swing.JMenuItem menu_profile;
+    private javax.swing.JMenuItem menu_user_signOut;
+    private javax.swing.JButton resetBtn;
+    private javax.swing.JButton searchBtn;
+    private com.toedter.calendar.JDateChooser toDateText;
+    // End of variables declaration//GEN-END:variables
+}

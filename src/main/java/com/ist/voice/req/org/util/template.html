@@ -1,0 +1,31 @@
+
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Insert title here</title>
+   <script src="https://apis.google.com/js/platform.js" async defer></script>
+   <meta name="google-signin-client_id" content="247819638124-icvmulh921s1ipa1h6hdl85k55dddu36.apps.googleusercontent.com">
+</head>
+<body>
+   <div class="g-signin2" data-onsuccess="onSignIn" id="myP"></div>
+      <img id="myImg"><br>
+      <p id="name"></p>
+      <div id="status">
+   </div>
+   <script type="text/javascript">
+      function onSignIn(googleUser) {
+      // window.location.href='success.jsp';
+      var profile = googleUser.getBasicProfile();
+      var imagurl=profile.getImageUrl();
+      var name=profile.getName();
+      var email=profile.getEmail();
+     console.log(name);
+     console.log(email);
+     
+    
+     
+   }
+   </script>
+
+</body>
+</html>
